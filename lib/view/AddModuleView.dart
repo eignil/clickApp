@@ -20,7 +20,7 @@ class _AddModuleViewState extends State<AddModuleView> {
               hintText: 'Enter your email',
             ),
             validator: (value) {
-              if (value.isEmpty) {
+              if (value!.isEmpty) {
                 return 'Please enter some text';
               }
               return null;
@@ -28,11 +28,11 @@ class _AddModuleViewState extends State<AddModuleView> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
+            child: ElevatedButton(
               onPressed: () {
                 // Validate will return true if the form is valid, or false if
                 // the form is invalid.
-                if (_formKey.currentState.validate()) {
+                if (_formKey.currentState!.validate()) {
                   // Process data.
                 }
               },

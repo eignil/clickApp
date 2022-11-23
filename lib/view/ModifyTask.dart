@@ -6,10 +6,11 @@ class ModifyTask extends StatefulWidget {
   final int taskIndex;
   final String taskType;
 
-  ModifyTask({Key key, @required this.taskIndex, @required this.taskType}):super(key:key);
+  ModifyTask({super.key, required this.taskIndex, required this.taskType});
 
   @override
-  State<StatefulWidget> createState() => _ModifyTaskState(taskIndex: taskIndex, taskType: taskType);
+  State<StatefulWidget> createState() =>
+      _ModifyTaskState(taskIndex: taskIndex, taskType: taskType);
 }
 
 class _ModifyTaskState extends State<ModifyTask> {
@@ -17,11 +18,11 @@ class _ModifyTaskState extends State<ModifyTask> {
   final String taskType;
 
   List<bool> _cycleTime = [false, false, false, false, false, false, false];
-  String _moduleName;
-  String _taskType;
-  String _taskName;
+  late String _moduleName;
+  late String _taskType;
+  late String _taskName;
 
-  _ModifyTaskState({Key key, @required this.taskIndex, @required this.taskType}) : super();
+  _ModifyTaskState({required this.taskIndex, required this.taskType});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,9 @@ class _ModifyTaskState extends State<ModifyTask> {
             TextField(
               decoration: InputDecoration(
                 labelText: "如需修改，请输入任务名称",
-                hintText: DataInstance.getInstance().task.getName(taskIndex, taskType),
+                hintText: DataInstance.getInstance()
+                    .task
+                    .getName(taskIndex, taskType),
                 prefixIcon: Icon(Icons.tab),
               ),
               onChanged: (value) {
@@ -44,33 +47,37 @@ class _ModifyTaskState extends State<ModifyTask> {
                 });
               },
             ),
-
             Divider(
               color: Colors.grey,
               height: 25,
               thickness: 5,
             ),
-            Text("daily类型任务，请选择执行时间，周一到周日：", textAlign: TextAlign.center,),
+            Text(
+              "daily类型任务，请选择执行时间，周一到周日：",
+              textAlign: TextAlign.center,
+            ),
             Row(
               children: [
                 for (var i = 0; i < 7; i += 1)
                   Checkbox(
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        _cycleTime[i] = value;
+                        _cycleTime[i] = value!;
                       });
                     },
                     value: _cycleTime[i],
                   ),
               ],
             ),
-
             Row(
               children: <Widget>[
                 Text("请选择任务所属模块:"),
                 DropdownButton(
                   items: _buildModuleDropdownMenu(),
-                  value: DataInstance.getInstance().task.getModuleByTaskName(DataInstance.getInstance().task.getName(taskIndex, taskType)),
+                  value: DataInstance.getInstance().task.getModuleByTaskName(
+                      DataInstance.getInstance()
+                          .task
+                          .getName(taskIndex, taskType)),
                   onChanged: (value) {
                     setState(() {
                       _moduleName = value;
@@ -80,7 +87,6 @@ class _ModifyTaskState extends State<ModifyTask> {
                 ),
               ],
             ),
-
             Row(
               children: <Widget>[
                 Text("请选择任务所属类型: 每日、每周、临时"),
@@ -95,20 +101,18 @@ class _ModifyTaskState extends State<ModifyTask> {
                 ),
               ],
             ),
-
             Row(
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => _modifyTask(),
                   child: Text("修改任务"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => _deleteTask(),
                   child: Text("删除任务"),
                 ),
               ],
             ),
-
           ],
         ),
       ),
@@ -117,18 +121,24 @@ class _ModifyTaskState extends State<ModifyTask> {
 
   List<DropdownMenuItem> _buildModuleDropdownMenu() {
     List<String> moduleNames = DataInstance.getInstance().module.getModules();
-    List<DropdownMenuItem> menu = new List();
+    List<DropdownMenuItem> menu = [];
     moduleNames.forEach((name) {
-      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+      menu.add(DropdownMenuItem(
+        value: name.toString(),
+        child: Text(name.toString()),
+      ));
     });
     return menu;
   }
 
   List<DropdownMenuItem> _buildTypeDropdownMenu() {
     List<String> taskTypes = DataInstance.getInstance().task.getTypes();
-    List<DropdownMenuItem> menu = new List();
+    List<DropdownMenuItem> menu = [];
     taskTypes.forEach((name) {
-      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+      menu.add(DropdownMenuItem(
+        value: name.toString(),
+        child: Text(name.toString()),
+      ));
     });
     return menu;
   }
@@ -138,7 +148,8 @@ class _ModifyTaskState extends State<ModifyTask> {
       _taskName = DataInstance.getInstance().task.getName(taskIndex, taskType);
     }
     if (_moduleName == null) {
-      _moduleName = DataInstance.getInstance().task.getModuleByTaskName(_taskName);
+      _moduleName =
+          DataInstance.getInstance().task.getModuleByTaskName(_taskName);
     }
     if (_taskType == null) {
       _taskType = taskType;
@@ -158,5 +169,4 @@ class _ModifyTaskState extends State<ModifyTask> {
     DataInstance.getInstance().task.deleteTask(taskIndex, taskType);
     Navigator.of(context).pop();
   }
-
 }

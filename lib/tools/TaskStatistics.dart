@@ -6,11 +6,11 @@ import 'package:path_provider/path_provider.dart';
 
 class TaskStatistics {
   TaskStatistics() {
-   init();
+    init();
   }
 
-  String dir;
-  File file;
+  late String dir;
+  late File file;
 
   void init() async {
     print("初始化文件模块");
@@ -21,13 +21,17 @@ class TaskStatistics {
 
   void add(Map<String, dynamic> log) {
     DateTime date = DateTime.now();
-    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    String today = date.year.toString() +
+        "-" +
+        date.month.toString() +
+        "-" +
+        date.day.toString();
 
     Map<String, dynamic> logs = new Map();
-    logs= json.decode(file.readAsStringSync());
+    logs = json.decode(file.readAsStringSync());
 
     if (!logs.containsKey(today)) {
-      logs[today] = new List<dynamic>();
+      logs[today] = <dynamic>[];
     }
     logs[today].add(log);
     file.writeAsStringSync(json.encode(logs));
@@ -35,7 +39,7 @@ class TaskStatistics {
   }
 
   List<String> show() {
-    List<String> records = new List();
+    List<String> records = [];
 
     Map<String, dynamic> logs = new Map();
     logs = json.decode(file.readAsStringSync());
@@ -57,17 +61,20 @@ class TaskStatistics {
     Map<String, dynamic> records = json.decode(file.readAsStringSync());
     records.forEach((key, value) {
       List<String> split = key.split("-");
-      DateTime date = new DateTime(int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
+      DateTime date = new DateTime(
+          int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
       if (date.compareTo(today) < 1 && date.compareTo(pre) > -1) {
         List<dynamic> record = value;
         record.forEach((element) {
-          statistics.update(element["moduleName"], (value) => (value + element["second"]), ifAbsent: ()=>(element["second"]));
-          amount += element["second"];
+          statistics.update(element["moduleName"],
+              (value) => (value + element["second"]).toInt(),
+              ifAbsent: () => (element["second"]));
+          amount += (0 + element["second"]).toInt();
         });
       }
     });
 
-    List<TaskStatisticsModel> modelList = new List();
+    List<TaskStatisticsModel> modelList = [];
     statistics.forEach((key, value) {
       int time = (value / 60).round();
       int percentage = ((value / amount) * 100).round();
@@ -81,16 +88,17 @@ class TaskStatistics {
     DateTime today = DateTime.now();
     DateTime pre = getPreTime(today, type);
 
-    List<List<String>> records = new List();
+    List<List<String>> records = [];
     Map<String, dynamic> logs = json.decode(file.readAsStringSync());
     logs.forEach((key, value) {
       List<String> split = key.split("-");
-      DateTime date = new DateTime(int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
+      DateTime date = new DateTime(
+          int.parse(split[0]), int.parse(split[1]), int.parse(split[2]));
       if (date.compareTo(today) < 1 && date.compareTo(pre) > -1) {
         List<dynamic> record = value;
         for (int i = 0; i < record.length; i++) {
           Map<String, dynamic> element = record[i];
-          List<String> temp = new List();
+          List<String> temp = [];
           temp.add(element["taskName"].toString());
           temp.add(element["begin"].toString().split(".")[0]);
           temp.add(element["end"].toString().split(".")[0]);
@@ -109,11 +117,9 @@ class TaskStatistics {
     DateTime pre = new DateTime(today.year, today.month, today.day);
     if (type == "week") {
       pre = pre.add(new Duration(days: -7));
-    }
-    else if (type == "month") {
+    } else if (type == "month") {
       pre = pre.add(new Duration(days: -30));
-    }
-    else if (type == "year") {
+    } else if (type == "year") {
       pre = pre.add(new Duration(days: -365));
     }
     return pre;
@@ -129,5 +135,4 @@ class TaskStatistics {
     records[date].removeAt(index);
     file.writeAsStringSync(json.encode(records));
   }
-
 }

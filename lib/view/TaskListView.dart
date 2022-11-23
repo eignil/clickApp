@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class TaskListView extends StatefulWidget {
   final String taskType;
 
-  TaskListView({Key key, @required this.taskType}):super(key:key);
+  TaskListView({super.key, required this.taskType});
 
   @override
   createState() => new TaskListState(taskType: taskType);
@@ -14,7 +14,7 @@ class TaskListView extends StatefulWidget {
 
 class TaskListState extends State<TaskListView> {
   final String taskType;
-  TaskListState({Key key, @required this.taskType}):super();
+  TaskListState({required this.taskType});
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +22,37 @@ class TaskListState extends State<TaskListView> {
         itemCount: DataInstance.getInstance().task.size(taskType),
         itemBuilder: (context, index) {
           return new ListTile(
-            title: new Text(DataInstance.getInstance().task.getName(index, taskType)),
+            title: new Text(
+                DataInstance.getInstance().task.getName(index, taskType)),
             trailing: Wrap(
               children: <Widget>[
                 !DataInstance.getInstance().task.show(index, taskType)
-                    ? new IconButton(icon: new Icon(Icons.close))
+                    ? new IconButton(
+                        icon: new Icon(Icons.close),
+                        onPressed: () => {},
+                      )
                     : new IconButton(
                         icon: new Icon(
-                          !DataInstance.getInstance().task.isComplete(index, taskType)
+                          !DataInstance.getInstance()
+                                  .task
+                                  .isComplete(index, taskType)
                               ? Icons.cancel
                               : Icons.check,
-                          color: !DataInstance.getInstance().task.isComplete(index, taskType)
+                          color: !DataInstance.getInstance()
+                                  .task
+                                  .isComplete(index, taskType)
                               ? Colors.red
                               : Colors.green,
                         ),
                         onPressed: () => _switchState(index)),
-                new IconButton(icon: new Icon(Icons.timer), onPressed: () => _startTask(index)),
-                new IconButton(icon: new Icon(Icons.stop), onPressed: () => _stopTask(index)),
+                new IconButton(
+                    icon: new Icon(Icons.timer),
+                    onPressed: () => _startTask(index)),
+                new IconButton(
+                    icon: new Icon(Icons.stop),
+                    onPressed: () => _stopTask(index)),
               ],
             ),
-
             onTap: () {
               Navigator.push(
                 context,
@@ -50,7 +61,6 @@ class TaskListState extends State<TaskListView> {
                         ModifyTask(taskIndex: index, taskType: taskType)),
               );
             },
-
           );
         });
   }
@@ -67,19 +77,21 @@ class TaskListState extends State<TaskListView> {
   }
 
   /// 跳转到任务修改页面
+  ///
+  /*
   void _modifyTask(int index) {
     Navigator.push(
         context,
         new MaterialPageRoute(
-//          builder: (context) =>
-//              ModifyTask(task: DataInstance.getInstance().task.getName(index)),
-        )
-    );
+          builder: (context) => ModifyTask(
+              taskType: DataInstance.getInstance().task.getName(index)),
+        ));
   }
-
+*/
   _startTask(int index) {
-    TaskTimer.getInstance().start(DataInstance.getInstance().task.getName(index, taskType),
-    DataInstance.getInstance().task.getModule(index, taskType));
+    TaskTimer.getInstance().start(
+        DataInstance.getInstance().task.getName(index, taskType),
+        DataInstance.getInstance().task.getModule(index, taskType));
   }
 
   _stopTask(int index) {

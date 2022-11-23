@@ -8,16 +8,16 @@ class TaskPropertyModel {
   String className = "TaskPropertyModel";
 
   TaskPropertyModel() {
-    tasks["daily"] = new List<dynamic>();
-    tasks["week"] = new List<dynamic>();
-    tasks["temp"] = new List<dynamic>();
+    tasks["daily"] = <dynamic>[];
+    tasks["week"] = <dynamic>[];
+    tasks["temp"] = <dynamic>[];
     initData();
   }
 
   void initData() async {
     print("Start read taskProperty.json");
 
-    List<dynamic> l = new List();
+    //List<dynamic> l = new List();
     String dir = (await getApplicationDocumentsDirectory()).path;
     File file = new File('$dir/TaskProperty.json');
     if (file.existsSync()) {
@@ -57,18 +57,26 @@ class TaskPropertyModel {
 
   bool isComplete(int index, String type) {
     DateTime date = DateTime.now();
-    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
-    return tasks[type][index]["isComplete"].toString() == "true" && tasks[type][index]["lastCompleteDate"] == today;
+    String today = date.year.toString() +
+        "-" +
+        date.month.toString() +
+        "-" +
+        date.day.toString();
+    return tasks[type][index]["isComplete"].toString() == "true" &&
+        tasks[type][index]["lastCompleteDate"] == today;
   }
 
   void changeState(int index, String type) {
     DateTime date = DateTime.now();
-    String today = date.year.toString() + "-" + date.month.toString() + "-" + date.day.toString();
+    String today = date.year.toString() +
+        "-" +
+        date.month.toString() +
+        "-" +
+        date.day.toString();
     if (tasks[type][index]["isComplete"].toString() == "true") {
       tasks[type][index]["isComplete"] = "false";
       tasks[type][index]["lastCompleteDate"] = today;
-    }
-    else {
+    } else {
       tasks[type][index]["isComplete"] = "true";
       tasks[type][index]["lastCompleteDate"] = today;
     }
@@ -82,7 +90,7 @@ class TaskPropertyModel {
 
   bool show(int index, String type) {
     int week = new DateTime.now().weekday;
-    if (type == "daily" && tasks[type][index]["cycleTime"][week-1]) {
+    if (type == "daily" && tasks[type][index]["cycleTime"][week - 1]) {
       return true;
     }
     return false;
@@ -110,7 +118,7 @@ class TaskPropertyModel {
   }
 
   List<String> getTypes() {
-    List<String> types = new List();
+    List<String> types = List.filled(1, "Default");
     types.add("daily");
     types.add("week");
     types.add("temp");
@@ -118,7 +126,7 @@ class TaskPropertyModel {
   }
 
   List<String> getAllName() {
-    List<String> names = new List();
+    List<String> names = List.filled(1, "Default");
     tasks.forEach((key, value) {
       List<dynamic> l = value;
       l.forEach((element) {
@@ -127,5 +135,4 @@ class TaskPropertyModel {
     });
     return names;
   }
-
 }

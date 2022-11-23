@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-
-enum Modules {Other, Worker, Learn, Exercise}
+enum Modules { Other, Worker, Learn, Exercise }
 
 class ModulePropertyModel {
-  List<Map<String, String>> modules = new List();
+  List<Map<String, String>> modules = List.filled(1, {"test": "test"});
 
   ModulePropertyModel() {
     Map<String, String> defaultModule = new Map();
@@ -23,7 +22,7 @@ class ModulePropertyModel {
     File file = new File('$dir/moduleProperty.json');
     if (file.existsSync()) {
       file.readAsLinesSync().forEach((element) {
-         modules.add(json.decode(element));
+        modules.add(json.decode(element));
       });
     }
 
@@ -35,11 +34,10 @@ class ModulePropertyModel {
     modules.forEach((element) {
       print(element);
     });
-
   }
 
   List<String> getModules() {
-    List<String> moduleNames = new List();
+    List<String> moduleNames = List.filled(1, "默认");
 //    modules.forEach((module) {
 //      moduleNames.add(module["name"]);
 //    });
@@ -50,5 +48,4 @@ class ModulePropertyModel {
     moduleNames.add("娱乐");
     return moduleNames;
   }
-
 }

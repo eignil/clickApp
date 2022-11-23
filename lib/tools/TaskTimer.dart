@@ -3,28 +3,27 @@ import 'dart:async';
 import 'package:click_app/tools/DataInstance.dart';
 import 'package:intl/intl.dart';
 
-
 class TaskTimer {
   factory TaskTimer() => getInstance();
-  static TaskTimer _instance;
+  static late TaskTimer _instance;
 
   TaskTimer._();
 
   static TaskTimer getInstance() {
-    if(_instance == null) {
+    if (_instance == null) {
       _instance = TaskTimer._();
     }
     return _instance;
   }
 
-  Timer timer;
+  late Timer timer;
   static const timeout = const Duration(seconds: 1);
   int second = 0;
-  String task;
-  String module;
-  bool timerPause = false;
-  DateTime begin;
-  String beginTime;
+  late String task;
+  late String module;
+  late bool timerPause = false;
+  late DateTime begin;
+  late String beginTime;
 
   void start(String task, String module) {
     if (timer != null && timer.isActive) {
@@ -44,7 +43,10 @@ class TaskTimer {
 
   void handleTimeout() {
     second += 1;
-    print("任务:" + task + "进行中：：" + Duration(seconds: second).toString().split('.').first.padLeft(8, "0"));
+    print("任务:" +
+        task +
+        "进行中：：" +
+        Duration(seconds: second).toString().split('.').first.padLeft(8, "0"));
   }
 
   void stop() {
@@ -59,7 +61,9 @@ class TaskTimer {
       return "无任务进行中";
     }
     int duration = DateTime.now().difference(begin).inSeconds;
-    return task + "    进行中       已过     " + Duration(seconds: duration).toString().split('.').first.padLeft(8, "0");
+    return task +
+        "    进行中       已过     " +
+        Duration(seconds: duration).toString().split('.').first.padLeft(8, "0");
   }
 
   void saveStatisticsLog() {

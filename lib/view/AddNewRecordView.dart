@@ -8,10 +8,10 @@ class AddNewRecordView extends StatefulWidget {
 }
 
 class _AddNewRecordState extends State<AddNewRecordView> {
-  String _taskName;
-  String _moduleName;
-  String _beginTime;
-  String _endTime;
+  late String _taskName;
+  late String _moduleName;
+  late String _beginTime;
+  late String _endTime;
   DateTime now = DateTime.now();
 
   @override
@@ -20,7 +20,10 @@ class _AddNewRecordState extends State<AddNewRecordView> {
       appBar: AppBar(
         title: Text("新任务的新记录添加"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.save), onPressed: () => _saveRecord(),),
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () => _saveRecord(),
+          ),
         ],
       ),
       body: ListView(
@@ -37,7 +40,6 @@ class _AddNewRecordState extends State<AddNewRecordView> {
               });
             },
           ),
-
           TextField(
             decoration: InputDecoration(
               labelText: "模块名称",
@@ -46,14 +48,14 @@ class _AddNewRecordState extends State<AddNewRecordView> {
             ),
             onChanged: (value) {
               setState(() {
-                _moduleName= value;
+                _moduleName = value;
               });
             },
           ),
-
           Text("开始时间选择"),
           CupertinoTimerPicker(
-            initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+            initialTimerDuration: Duration(
+                hours: now.hour, minutes: now.minute, seconds: now.second),
             onTimerDurationChanged: (Duration duration) {
               setState(() {
                 DateTime today = new DateTime(now.year, now.month, now.day);
@@ -62,10 +64,10 @@ class _AddNewRecordState extends State<AddNewRecordView> {
               });
             },
           ),
-
           Text("结束时间选择"),
           CupertinoTimerPicker(
-            initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+            initialTimerDuration: Duration(
+                hours: now.hour, minutes: now.minute, seconds: now.second),
             onTimerDurationChanged: (Duration duration) {
               setState(() {
                 DateTime today = new DateTime(now.year, now.month, now.day);
@@ -74,7 +76,6 @@ class _AddNewRecordState extends State<AddNewRecordView> {
               });
             },
           ),
-
         ],
       ),
     );
@@ -83,7 +84,12 @@ class _AddNewRecordState extends State<AddNewRecordView> {
   _saveRecord() {
     DateTime begin = DateTime.parse(_beginTime);
     DateTime end = DateTime.parse(_endTime);
-    print("Save record::" + _beginTime + "--" + _endTime + "::" + end.difference(begin).inSeconds.toString());
+    print("Save record::" +
+        _beginTime +
+        "--" +
+        _endTime +
+        "::" +
+        end.difference(begin).inSeconds.toString());
 
     Map<String, dynamic> log = new Map();
     log["taskName"] = this._taskName;
@@ -95,5 +101,4 @@ class _AddNewRecordState extends State<AddNewRecordView> {
 
     Navigator.of(context).pop();
   }
-
 }

@@ -9,9 +9,9 @@ class AddTaskView extends StatefulWidget {
 
 class _AddTaskViewState extends State<AddTaskView> {
   List<bool> _cycleTime = [false, false, false, false, false, false, false];
-  String _moduleName;
-  String _taskType;
-  String _taskName;
+  late String _moduleName;
+  late String _taskType;
+  late String _taskName;
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +35,28 @@ class _AddTaskViewState extends State<AddTaskView> {
                 });
               },
             ),
-
             Divider(
               color: Colors.grey,
               height: 25,
               thickness: 5,
             ),
-            Text("如果是daily类型任务，请选择执行时间，周一到周日：", textAlign: TextAlign.center,),
+            Text(
+              "如果是daily类型任务，请选择执行时间，周一到周日：",
+              textAlign: TextAlign.center,
+            ),
             Row(
               children: [
                 for (var i = 0; i < 7; i += 1)
                   Checkbox(
-                    onChanged: (bool value) {
+                    onChanged: (bool? value) {
                       setState(() {
-                        _cycleTime[i] = value;
+                        _cycleTime[i] = value!;
                       });
                     },
                     value: _cycleTime[i],
                   ),
               ],
             ),
-
             Row(
               children: <Widget>[
                 Text("请选择任务所属模块:"),
@@ -70,7 +71,6 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ),
               ],
             ),
-
             Row(
               children: <Widget>[
                 Text("请选择任务所属类型: 每日、每周、临时"),
@@ -85,15 +85,13 @@ class _AddTaskViewState extends State<AddTaskView> {
                 ),
               ],
             ),
-
             Align(
               alignment: Alignment.centerRight,
-              child: RaisedButton(
+              child: ElevatedButton(
                 onPressed: () => _addNewTask(),
                 child: Text("添加任务"),
               ),
             ),
-
           ],
         ),
       ),
@@ -102,18 +100,24 @@ class _AddTaskViewState extends State<AddTaskView> {
 
   List<DropdownMenuItem> _buildModuleDropdownMenu() {
     List<String> moduleNames = DataInstance.getInstance().module.getModules();
-    List<DropdownMenuItem> menu = new List();
+    List<DropdownMenuItem> menu = [];
     moduleNames.forEach((name) {
-      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+      menu.add(DropdownMenuItem(
+        value: name.toString(),
+        child: Text(name.toString()),
+      ));
     });
     return menu;
   }
 
   List<DropdownMenuItem> _buildTypeDropdownMenu() {
     List<String> taskTypes = DataInstance.getInstance().task.getTypes();
-    List<DropdownMenuItem> menu = new List();
+    List<DropdownMenuItem> menu = [];
     taskTypes.forEach((name) {
-      menu.add(DropdownMenuItem(value: name.toString(), child: Text(name.toString()),));
+      menu.add(DropdownMenuItem(
+        value: name.toString(),
+        child: Text(name.toString()),
+      ));
     });
     return menu;
   }
@@ -127,5 +131,4 @@ class _AddTaskViewState extends State<AddTaskView> {
 
     Navigator.of(context).pop();
   }
-
 }

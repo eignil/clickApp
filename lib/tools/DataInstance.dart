@@ -5,12 +5,12 @@ import 'package:click_app/tools/TaskStatistics.dart';
 /// 文件数据读取持有单例
 class DataInstance {
   factory DataInstance() => getInstance();
-  static DataInstance _instance;
+  static DataInstance _instance = DataInstance();
 
   DataInstance._();
 
   static DataInstance getInstance() {
-    if(_instance == null) {
+    if (_instance == null) {
       _instance = DataInstance._();
     }
     return _instance;

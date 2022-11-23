@@ -8,9 +8,9 @@ class AddOldRecordView extends StatefulWidget {
 }
 
 class _AddOldRecordState extends State<AddOldRecordView> {
-  String _taskName;
-  String _beginTime;
-  String _endTime;
+  late String _taskName;
+  late String _beginTime;
+  late String _endTime;
   DateTime now = DateTime.now();
 
   @override
@@ -19,12 +19,15 @@ class _AddOldRecordState extends State<AddOldRecordView> {
       appBar: AppBar(
         title: Text("已有任务的新记录添加"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.save), onPressed: () => _saveRecord(),),
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () => _saveRecord(),
+          ),
         ],
       ),
       body: ListView(
         children: <Widget>[
-          Row (
+          Row(
             children: <Widget>[
               Text("请选择任务名称:"),
               DropdownButton(
@@ -38,10 +41,10 @@ class _AddOldRecordState extends State<AddOldRecordView> {
               ),
             ],
           ),
-
           Text("开始时间选择"),
           CupertinoTimerPicker(
-            initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+            initialTimerDuration: Duration(
+                hours: now.hour, minutes: now.minute, seconds: now.second),
             onTimerDurationChanged: (Duration duration) {
               setState(() {
                 DateTime today = new DateTime(now.year, now.month, now.day);
@@ -50,10 +53,10 @@ class _AddOldRecordState extends State<AddOldRecordView> {
               });
             },
           ),
-
           Text("结束时间选择"),
           CupertinoTimerPicker(
-            initialTimerDuration: Duration(hours: now.hour,minutes: now.minute,seconds: now.second),
+            initialTimerDuration: Duration(
+                hours: now.hour, minutes: now.minute, seconds: now.second),
             onTimerDurationChanged: (Duration duration) {
               setState(() {
                 DateTime today = new DateTime(now.year, now.month, now.day);
@@ -62,7 +65,6 @@ class _AddOldRecordState extends State<AddOldRecordView> {
               });
             },
           ),
-
         ],
       ),
     );
@@ -70,9 +72,12 @@ class _AddOldRecordState extends State<AddOldRecordView> {
 
   List<DropdownMenuItem> _buildDropdownMenu() {
     List<String> taskNames = DataInstance.getInstance().task.getAllName();
-    List<DropdownMenuItem> menu = new List();
+    List<DropdownMenuItem> menu = [];
     taskNames.forEach((name) {
-      menu.add(DropdownMenuItem(value: name, child: Text(name),));
+      menu.add(DropdownMenuItem(
+        value: name,
+        child: Text(name),
+      ));
     });
     return menu;
   }
@@ -80,11 +85,17 @@ class _AddOldRecordState extends State<AddOldRecordView> {
   _saveRecord() {
     DateTime begin = DateTime.parse(_beginTime);
     DateTime end = DateTime.parse(_endTime);
-    print("Save record::" + _beginTime + "--" + _endTime + "::" + end.difference(begin).inSeconds.toString());
+    print("Save record::" +
+        _beginTime +
+        "--" +
+        _endTime +
+        "::" +
+        end.difference(begin).inSeconds.toString());
 
     Map<String, dynamic> log = new Map();
     log["taskName"] = this._taskName;
-    log["moduleName"] = DataInstance.getInstance().task.getModuleByTaskName(this._taskName);
+    log["moduleName"] =
+        DataInstance.getInstance().task.getModuleByTaskName(this._taskName);
     log["second"] = end.difference(begin).inSeconds;
     log["begin"] = this._beginTime;
     log["end"] = this._endTime;
@@ -92,5 +103,4 @@ class _AddOldRecordState extends State<AddOldRecordView> {
 
     Navigator.of(context).pop();
   }
-
 }
